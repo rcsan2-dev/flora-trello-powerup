@@ -1,0 +1,10 @@
+html, body { margin: 0; padding: 0; }
+#floraBridge { padding: 12px; color: #172b4d; }
+#floraBridge h2 { margin: 0 0 8px; font-size: 18px; }
+#floraBridge h3 { margin: 14px 0 7px; font-size: 13px; }
+#floraBridge .intro, #floraBridge p { margin: 0 0 8px; line-height: 1.45; }
+.media { display: flex; align-items: center; gap: 10px; padding: 7px 9px; margin-bottom: 6px; border-radius: 5px; background: #f4f5f7; }
+.media strong { min-width: 62px; }
+.media.unity { border-left: 4px solid #3c87ea; }
+.media.max { border-left: 4px solid #2ea19f; }
+.status { margin-top: 14px; padding: 8px 10px; border-radius: 5px; background: #006767; color: white; font-weight: 600; }
