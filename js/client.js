@@ -1,10 +1,21 @@
-/* Flora Tools Trello Bridge R02 */
+/* Flora Tools Trello Bridge R04 */
 
 (function () {
   'use strict';
 
   var ICON_DARK = './icon-white.png';
   var ICON_LIGHT = './icon-dark.png';
+
+  var CONFIG = window.FLORA_TRELLO_CONFIG || {
+    appKey: '',
+    appName: 'Flora Tools Trello Bridge',
+    appAuthor: 'Flora Tools'
+  };
+
+  function isConfigured() {
+    return CONFIG.appKey &&
+      CONFIG.appKey !== 'PASTE_TRELLO_API_KEY_HERE';
+  }
 
   function attachmentName(att) {
     if (!att) return '';
@@ -41,18 +52,22 @@
     return result;
   }
 
-  window.TrelloPowerUp.initialize({
+  function openDashboard(t, title) {
+    return t.popup({
+      title: title || 'Flora Tools Trello Bridge',
+      url: './dashboard.html',
+      height: 520
+    });
+  }
+
+  var capabilities = {
     'board-buttons': function (t) {
       return [{
         icon: { dark: ICON_DARK, light: ICON_LIGHT },
         text: 'Flora Tools',
         condition: 'edit',
         callback: function () {
-          return t.popup({
-            title: 'Flora Tools Trello Bridge',
-            url: './dashboard.html',
-            height: 360
-          });
+          return openDashboard(t);
         }
       }];
     },
@@ -87,12 +102,33 @@
       return badges;
     },
 
+    'authorization-status': function (t) {
+      if (!isConfigured()) {
+        return { authorized: false };
+      }
+
+      return t.getRestApi()
+        .isAuthorized()
+        .then(function (authorized) {
+          return { authorized: !!authorized };
+        })
+        .catch(function () {
+          return { authorized: false };
+        });
+    },
+
+    'show-authorization': function (t) {
+      return openDashboard(t, 'Authorize Flora Tools');
+    },
+
     'on-enable': function (t) {
-      return t.popup({
-        title: 'Flora Tools Trello Bridge',
-        url: './dashboard.html',
-        height: 360
-      });
+      return openDashboard(t);
     }
+  };
+
+  window.TrelloPowerUp.initialize(capabilities, {
+    appKey: CONFIG.appKey,
+    appName: CONFIG.appName,
+    appAuthor: CONFIG.appAuthor
   });
 }());
